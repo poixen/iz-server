@@ -27,7 +27,7 @@ public class BasicAuthenticator implements Authenticator<BasicCredentials, User>
      * @throws AuthenticationException thrown if authentication
      */
     public Optional<User> authenticate(final BasicCredentials basicCredentials) throws AuthenticationException {
-        User user = userDAO.authenticate(basicCredentials.getUsername(), basicCredentials.getPassword());
+        User user = userDAO.getUser(basicCredentials.getUsername(), basicCredentials.getPassword());
         return user == null ? Optional.empty() : Optional.of(user);
     }
 }

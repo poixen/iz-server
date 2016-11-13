@@ -26,8 +26,17 @@ public interface UserDAO {
      *
      * @param username the username of the user to append
      */
-    @SqlUpdate("UPDATE users SET successful_logins = successful_logins || CURRENT_TIMESTAMP WHERE username = :username")
-    void updateSuccessfulLogin(@Bind("username") String username);
+    @SqlUpdate("UPDATE users SET successful_logins=ARRAY_APPEND((SELECT successful_logins FROM users WHERE username=:username),:timestamp) WHERE username=:username")
+    void addSuccessfulLogin(@Bind("timestamp") String timestamp, @Bind("username") String username);
+
+
+    /**
+     * Append the current timestamp to the {@code failed_logins} table
+     *
+     * @param username the username of the user to append
+     */
+    @SqlUpdate("UPDATE users SET failed_logins = array_append(failed_logins, :timestamp) WHERE username = :username")
+    void addFailedLogin(@Bind("timestamp") String timestamp, @Bind("username") String username);
 
     /**
      * returns the successful logins for the provided user
@@ -36,7 +45,7 @@ public interface UserDAO {
      * @return the logging for the provided user
      */
     @SqlQuery("SELECT successful_logins FROM users WHERE username = :username")
-    String[] findSuccessfulLoginsByUsername(@Bind("username") String username);
+    String[] getSuccessfulLogins(@Bind("username") String username);
 
 
     /**
@@ -46,7 +55,7 @@ public interface UserDAO {
      * @return the logging for the provided user
      */
     @SqlQuery("SELECT failed_logins FROM users WHERE username = :username")
-    String[] findFailedLoginsByUsername(@Bind("username") String username);
+    String[] getFailedLogins(@Bind("username") String username);
 
     /**
      * Returns the {@link User} by their {@code username}
@@ -55,7 +64,7 @@ public interface UserDAO {
      * @return the {@link User} by thier {@code username}
      */
     @SqlQuery("SELECT * FROM users WHERE username = :username LIMIT 1")
-    User findExistingUser(@Bind("username") String username);
+    User getUser(@Bind("username") String username);
 
     /**
      * Returns a {@link User} by their {@code username} and {@code password}
@@ -65,7 +74,7 @@ public interface UserDAO {
      * @return a {@link User} by their {@code username} and {@code password}
      */
     @SqlQuery("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
-    User authenticate(@Bind("username") String username, @Bind("password") String password);
+    User getUser(@Bind("username") String username, @Bind("password") String password);
 
     /**
      * Close with no args is used to close the connection

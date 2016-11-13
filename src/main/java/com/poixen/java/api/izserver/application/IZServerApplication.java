@@ -8,6 +8,7 @@ import com.poixen.java.api.izserver.model.dao.UserDAO;
 import com.poixen.java.api.izserver.model.request.validators.LoginRequestValidator;
 import com.poixen.java.api.izserver.model.request.validators.RegisterRequestValidator;
 import com.poixen.java.api.izserver.model.request.validators.RequestValidator;
+import com.poixen.java.api.izserver.resource.LoginLogsResource;
 import com.poixen.java.api.izserver.resource.LoginResource;
 import com.poixen.java.api.izserver.resource.RegisterResource;
 import io.dropwizard.Application;
@@ -60,6 +61,10 @@ public class IZServerApplication extends Application<IZServerConfiguration> {
         RequestValidator loginRequestValidator = new LoginRequestValidator();
         final LoginResource loginResource = new LoginResource(loginRequestValidator, userDAO);
         env.jersey().register(loginResource);
+
+        // create LoginResource, register LoginResource
+        final LoginLogsResource loginLogsResource = new LoginLogsResource();
+        env.jersey().register(loginLogsResource);
 
         // register a health check // TODO: 12/11/16 need to update for new resources
 //        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());

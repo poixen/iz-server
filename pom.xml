@@ -75,10 +75,18 @@
             <artifactId>dropwizard-jdbi</artifactId>
         </dependency>
 
+        <!-- JDBC Driver -->
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
+        </dependency>
+
+        <!-- Hashing -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
         </dependency>
 
         <!-- Dropwizard testing -->

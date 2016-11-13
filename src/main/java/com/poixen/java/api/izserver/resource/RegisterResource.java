@@ -5,6 +5,7 @@ import com.poixen.java.api.izserver.model.User;
 import com.poixen.java.api.izserver.model.dao.UserDAO;
 import com.poixen.java.api.izserver.model.request.RegisterRequest;
 import com.poixen.java.api.izserver.model.request.validators.RequestValidator;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -50,14 +51,14 @@ public class RegisterResource {
 
         // check for existing username
         // TODO: 12/11/16 can add guava cache for user names to save db calls
-        User user = userDAO.findExistingUser(request.getUsername());
+        User user = userDAO.getUser(request.getUsername());
         if (user != null) {
             return Response.status(409).build();
         }
 
         // add user to db with USER role
-        // TODO: 12/11/16 in prod would need to S/P/Hash the password
-        userDAO.insert(request.getUsername(), request.getPassword(), request.getName(), request.getAge());
+        // TODO: 12/11/16 in prod would need to S/P/Hash the password, currently store in plaintext
+        userDAO.insert(request.getUsername(), DigestUtils.sha1Hex(request.getPassword()), request.getName(), request.getAge());
 
         // close the dao
         userDAO.close();

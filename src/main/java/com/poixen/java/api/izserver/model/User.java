@@ -29,8 +29,15 @@ public class User implements Principal {
         return name;
     }
 
+    public String getPassword() { return password;}
 
     public String[] getRoles() {
         return roles;
     }
+
+    public String getUsername() { return username; }
+
+    public String[] getSuccessfulLogins() {return successfulLogins;}
+
+    public String[] getFailedLogins() {return failedLogins;}
 }

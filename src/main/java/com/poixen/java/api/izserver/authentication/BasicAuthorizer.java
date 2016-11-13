@@ -11,7 +11,6 @@ import java.util.Arrays;
 public class BasicAuthorizer implements Authorizer<User> {
 
     public boolean authorize(User principal, String role) {
-        // TODO: 12/11/16 cheap way to validate role
         return Arrays.asList(principal.getRoles()).contains("USER");
     }
 }
