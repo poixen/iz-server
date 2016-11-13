@@ -3,11 +3,12 @@ package com.poixen.java.api.izserver.application;
 import com.poixen.java.api.izserver.authentication.BasicAuthenticator;
 import com.poixen.java.api.izserver.authentication.BasicAuthorizer;
 import com.poixen.java.api.izserver.configuration.IZServerConfiguration;
-import com.poixen.java.api.izserver.healthcheck.TemplateHealthCheck;
 import com.poixen.java.api.izserver.model.User;
 import com.poixen.java.api.izserver.model.dao.UserDAO;
+import com.poixen.java.api.izserver.model.request.validators.LoginRequestValidator;
 import com.poixen.java.api.izserver.model.request.validators.RegisterRequestValidator;
-import com.poixen.java.api.izserver.resource.HelloWorldResource;
+import com.poixen.java.api.izserver.model.request.validators.RequestValidator;
+import com.poixen.java.api.izserver.resource.LoginResource;
 import com.poixen.java.api.izserver.resource.RegisterResource;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -42,10 +43,6 @@ public class IZServerApplication extends Application<IZServerConfiguration> {
 
     @Override
     public void run(IZServerConfiguration config, Environment env) throws Exception {
-        // register resource for accessing
-        // TODO: 12/11/16 remove
-        final HelloWorldResource resource = new HelloWorldResource(config.getTemplate(), config.getDefaultName());
-        env.jersey().register(resource);
 
         // create a new managed connection pool, health check for connectivity, and a new DBI instance.
         final DBIFactory factory = new DBIFactory();
@@ -54,15 +51,19 @@ public class IZServerApplication extends Application<IZServerConfiguration> {
         env.jersey().register(new DBIExceptionsBundle());
 
         // create validator for RegisterResource, create RegisterResource, register RegisterResource
-        RegisterRequestValidator registerRequestValidator = new RegisterRequestValidator(config.getMinPasswordLen(), config.getMaxPasswordLen(),
+        RequestValidator registerRequestValidator = new RegisterRequestValidator(config.getMinPasswordLen(), config.getMaxPasswordLen(),
                 config.getMinUsernameLen(), config.getMaxUsernameLen());
         final RegisterResource registerResource = new RegisterResource(registerRequestValidator, userDAO);
         env.jersey().register(registerResource);
 
-        // register a health check
-        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());
-        env.healthChecks().register("template", healthCheck);
+        // create validator for LoginResource, create LoginResource, register LoginResource
+        RequestValidator loginRequestValidator = new LoginRequestValidator();
+        final LoginResource loginResource = new LoginResource(loginRequestValidator, userDAO);
+        env.jersey().register(loginResource);
 
+        // register a health check // TODO: 12/11/16 need to update for new resources
+//        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());
+//        env.healthChecks().register("template", healthCheck);
 
         // wrap BasicAuthenticator in a CachingAuthenticator
         CachingAuthenticator<BasicCredentials, User> cachingAuthenticator =
@@ -70,7 +71,7 @@ public class IZServerApplication extends Application<IZServerConfiguration> {
                         config.getAuthenticationCachePolicy());
 
         // register basic authentication
-        // given more time we could set up {@link ChainedFactory}s to also handle OAuth2
+        // TODO: 12/11/16 set up {@link ChainedFactory} for using OAuth2
         env.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<User>()
                         .setAuthenticator(cachingAuthenticator)

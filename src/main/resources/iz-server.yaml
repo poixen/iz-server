@@ -1,9 +1,3 @@
-
-# template to return to logged in user
-template: Hello, %s!
-
-defaultName: Stranger
-
 #Caches up to {maximumSize} principals with an LRU policy, evicting stale entries {expireAfterAccess}.
 authenticationCachePolicy: maximumSize=10000, expireAfterAccess=1m
 

@@ -22,10 +22,10 @@ public class RegisterRequestValidator implements RequestValidator {
     }
 
     @Override
-    public void validate(final Request reqest) throws IllegalArgumentException {
+    public void validate(final Request request) throws IllegalArgumentException {
 
-        if (reqest instanceof RegisterRequest) {
-            RegisterRequest registerRequest = (RegisterRequest)reqest;
+        if (request instanceof RegisterRequest) {
+            RegisterRequest registerRequest = (RegisterRequest)request;
 
             // validate username length
             int usernameLen = registerRequest.getUsername().length();
@@ -46,7 +46,7 @@ public class RegisterRequestValidator implements RequestValidator {
             //  . and so on..
 
         } else {
-            throw new IllegalArgumentException("Can not validate a request of type '" + reqest.getClass().getName() + "' in RegisterRequestValidator");
+            throw new IllegalArgumentException("Can not validate a request of type '" + request.getClass().getName() + "' in RegisterRequestValidator");
         }
     }
 }

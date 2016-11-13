@@ -8,17 +8,20 @@ public class User implements Principal {
     private final String password;
     private final String name;
     private final int age;
-    private final String logins;
-    private final String roles;
+    private final String[] successfulLogins;
+    private final String[] failedLogins;
+    private final String[] roles;
 
     public User(final int id, final String username, final String password,
-                final String name, final int age, final String logins, final String roles) {
+                final String name, final int age, final String[] successfulLogins,
+                final String[] failedLogins, final String[] roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.age = age;
-        this.logins = logins;
+        this.successfulLogins = successfulLogins;
+        this.failedLogins = failedLogins;
         this.roles = roles;
     }
 
@@ -26,11 +29,8 @@ public class User implements Principal {
         return name;
     }
 
-    public int getId() {
-        return (int) (Math.random() * 100);
-    }
 
-    public String getRoles() {
+    public String[] getRoles() {
         return roles;
     }
 }

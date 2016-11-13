@@ -31,12 +31,6 @@ public class IZServerConfiguration extends Configuration {
     }
 
     @NotEmpty
-    private String template;
-
-    @NotEmpty
-    private String defaultName = "Stranger";
-
-    @NotEmpty
     private String authenticationCachePolicy = "maximumSize=10000, expireAfterAccess=10m";
 
     @NotNull
@@ -50,26 +44,6 @@ public class IZServerConfiguration extends Configuration {
 
     @NotNull
     private Integer maxPasswordLen;
-
-    @JsonProperty
-    public String getTemplate() {
-        return template;
-    }
-
-    @JsonProperty
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    @JsonProperty
-    public String getDefaultName() {
-        return defaultName;
-    }
-
-    @JsonProperty
-    public void setDefaultName(String name) {
-        this.defaultName = name;
-    }
 
     @JsonProperty
     public CacheBuilderSpec getAuthenticationCachePolicy() {

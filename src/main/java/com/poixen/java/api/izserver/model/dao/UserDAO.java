@@ -14,25 +14,39 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 public interface UserDAO {
 
     /**
-     * Creates a 'users' table
-     */
-    @SqlUpdate("CREATE TABLE users (id SERIAL, username varchar(32), password char(40), name varchar(64), age integer, logins json)")
-    void createUsersTable();
-
-    /**
      * Insert a new user into the table
      */
-    @SqlUpdate("INSERT INTO users (username, password, name, age, logins) values (:username, :password, :name, :age, cast (:logins as json))")
-    void insert(@Bind("username") String username, @Bind("password") String password, @Bind("name") String name, @Bind("age") int age, @Bind("logins") String logins);
+    // TODO: 13/11/16 very hacky given more time would develop a more elegant solution
+    @SqlUpdate("INSERT INTO users (username, password, name, age, successful_logins, failed_logins, roles) values (:username, :password, :name, :age, '{}', '{}', '{\"USER\"}')")
+    void insert(@Bind("username") String username, @Bind("password") String password, @Bind("name") String name, @Bind("age") int age);
+
 
     /**
-     * returns the logins for the provided user
+     * Append the current timestamp to the {@code successful_login} table
+     *
+     * @param username the username of the user to append
+     */
+    @SqlUpdate("UPDATE users SET successful_logins = successful_logins || CURRENT_TIMESTAMP WHERE username = :username")
+    void updateSuccessfulLogin(@Bind("username") String username);
+
+    /**
+     * returns the successful logins for the provided user
      *
      * @param username username of the user to fetch login information for
      * @return the logging for the provided user
      */
-    @SqlQuery("SELECT logins FROM users WHERE username = :username")
-    String findLoginsByUsername(@Bind("username") String username);
+    @SqlQuery("SELECT successful_logins FROM users WHERE username = :username")
+    String[] findSuccessfulLoginsByUsername(@Bind("username") String username);
+
+
+    /**
+     * returns the failed logins for the provided user
+     *
+     * @param username username of the user to fetch login information for
+     * @return the logging for the provided user
+     */
+    @SqlQuery("SELECT failed_logins FROM users WHERE username = :username")
+    String[] findFailedLoginsByUsername(@Bind("username") String username);
 
     /**
      * Returns the {@link User} by their {@code username}
