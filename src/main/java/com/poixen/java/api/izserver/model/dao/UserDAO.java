@@ -16,7 +16,7 @@ public interface UserDAO {
     /**
      * Insert a new user into the table
      */
-    @SqlUpdate("INSERT INTO users (username, password, name, age, successful_logins, failed_logins, roles) values (:username, :password, :name, :age, null, null, 'USER')")
+    @SqlUpdate("INSERT INTO users (username, password, name, age, successful_logins, failed_logins, roles) values (:username, :password, :name, :age, null, null, '{\"USER\"}')")
     void insert(@Bind("username") String username, @Bind("password") String password, @Bind("name") String name, @Bind("age") int age);
 
 
@@ -25,7 +25,7 @@ public interface UserDAO {
      *
      * @param username the username of the user to append
      */
-    @SqlUpdate("UPDATE users SET successful_logins= :timestamp WHERE username=:username")
+    @SqlUpdate("UPDATE users SET successful_logins=ARRAY_APPEND((SELECT successful_logins FROM users WHERE username=:username),:timestamp) WHERE username=:username")
     void addSuccessfulLogin(@Bind("timestamp") String timestamp, @Bind("username") String username);
 
 
@@ -34,27 +34,9 @@ public interface UserDAO {
      *
      * @param username the username of the user to append
      */
-    @SqlUpdate("UPDATE users SET failed_logins = array_append(failed_logins, :timestamp) WHERE username = :username")
+    @SqlUpdate("UPDATE users SET failed_logins=ARRAY_APPEND((SELECT failed_logins FROM users WHERE username=:username),:timestamp) WHERE username=:username")
     void addFailedLogin(@Bind("timestamp") String timestamp, @Bind("username") String username);
 
-    /**
-     * returns the successful logins for the provided user
-     *
-     * @param username username of the user to fetch login information for
-     * @return the logging for the provided user
-     */
-    @SqlQuery("SELECT successful_logins FROM users WHERE username = :username")
-    String[] getSuccessfulLogins(@Bind("username") String username);
-
-
-    /**
-     * returns the failed logins for the provided user
-     *
-     * @param username username of the user to fetch login information for
-     * @return the logging for the provided user
-     */
-    @SqlQuery("SELECT failed_logins FROM users WHERE username = :username")
-    String[] getFailedLogins(@Bind("username") String username);
 
     /**
      * Returns the {@link User} by their {@code username}

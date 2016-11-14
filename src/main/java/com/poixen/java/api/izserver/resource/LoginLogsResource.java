@@ -27,7 +27,7 @@ public class LoginLogsResource {
             return null;
         }
 
-        return user.getSuccessfulLogins();
+        return getLogins(user.getSuccessfulLogins(), 5);
     }
 
 
@@ -43,6 +43,14 @@ public class LoginLogsResource {
             return null;
         }
 
-        return user.getFailedLogins();
+        return getLogins(user.getFailedLogins(), 5);
+    }
+
+
+    private List<String> getLogins(final List<String> logins, final int limit) {
+        if (logins.size() >= limit) {
+            return logins.subList(logins.size() - limit, logins.size());
+        }
+        return logins;
     }
 }

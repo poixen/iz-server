@@ -35,35 +35,39 @@ public class LoginResource {
     @Timed
     public Response login(final LoginRequest request) {
 
+        Map<String, Object> entity = new HashMap<>();
+
         // validate incoming request
         try{
             requestValidator.validate(request);
         } catch (Exception e) {
             // TODO: 12/11/16 can be expanded upon if needed
-            return Response.status(400).entity(e.getMessage()).build();
+            entity.put("code", "400");
+            entity.put("reason", e.getMessage());
+            return Response.status(400).entity(entity).build();
         }
 
         // get the user
         User user = userDAO.getUser(request.getUsername());
         if (user == null) {
-            return Response.status(401).entity("Wrong username or password").build();
+            entity.put("code", "401");
+            entity.put("reason", "wrong username or password");
+            return Response.status(401).entity(entity).build();
         }
         // check password
         if (!user.getPassword().equals(DigestUtils.sha1Hex(request.getPassword()))) {
-            List<String> timestamps = new ArrayList<>(user.getFailedLogins());
-            timestamps.add(new Date().toString());
-            userDAO.addFailedLogin(String.join(",", timestamps), user.getUsername());
+            userDAO.addFailedLogin(new Date().toString(), user.getUsername());
+            entity.put("code", "401");
+            entity.put("reason", "wrong username or password");
+            return Response.status(401).entity(entity).build();
         }
 
         // add a timestamp to the successful login
-        List<String> timestamps = new ArrayList<>(user.getSuccessfulLogins());
-        timestamps.add(new Date().toString());
-        String timestampString = String.join(",", timestamps);
-        userDAO.addSuccessfulLogin(timestampString, request.getUsername());
+        userDAO.addSuccessfulLogin(new Date().toString(), request.getUsername());
 
         String pretoken = user.getUsername() + ":" + user.getPassword();
         String token = new String(Base64.encodeBase64(pretoken.getBytes()));
-        Map<String, String> entity = new HashMap<>();
+        entity.put("code", "200");
         entity.put("token", token);
 
         // TODO: 12/11/16 can return an auth token to be used, for now we return the user to see something

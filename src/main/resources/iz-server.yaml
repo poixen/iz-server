@@ -1,5 +1,5 @@
 #Caches up to {maximumSize} principals with an LRU policy, evicting stale entries {expireAfterAccess}.
-authenticationCachePolicy: maximumSize=10000, expireAfterAccess=1m
+authenticationCachePolicy: maximumSize=10000, expireAfterAccess=10s
 
 # username parameters
 minUsernameLen: 6
