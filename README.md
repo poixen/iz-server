@@ -19,6 +19,16 @@ Ways to improve given more time:
 + Load testing, see how much traffic it can consume.
 + OAuth2 using a `ChainedFactory`
 
+
+
+## PostgreSQL Users Table
+
+The following code can be used to create the `users` table that will be used with the server.
+
+```sql
+CREATE TABLE users (id SERIAL, username varchar(32), password char(40), name varchar(64), age integer, successful_logins varchar(32)[5], failed_logins varchar(32)[5], roles text[3]);
+```
+
 ## Register
 
 Method: `POST`
