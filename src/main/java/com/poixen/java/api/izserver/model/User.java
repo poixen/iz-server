@@ -1,6 +1,7 @@
 package com.poixen.java.api.izserver.model;
 
 import java.security.Principal;
+import java.util.List;
 
 public class User implements Principal {
     private final int id;
@@ -8,13 +9,13 @@ public class User implements Principal {
     private final String password;
     private final String name;
     private final int age;
-    private final String[] successfulLogins;
-    private final String[] failedLogins;
-    private final String[] roles;
+    private final List<String> successfulLogins;
+    private final List<String> failedLogins;
+    private final List<String> roles;
 
     public User(final int id, final String username, final String password,
-                final String name, final int age, final String[] successfulLogins,
-                final String[] failedLogins, final String[] roles) {
+                final String name, final int age, final List<String> successfulLogins,
+                final List<String> failedLogins, final List<String> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -31,13 +32,13 @@ public class User implements Principal {
 
     public String getPassword() { return password;}
 
-    public String[] getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
     public String getUsername() { return username; }
 
-    public String[] getSuccessfulLogins() {return successfulLogins;}
+    public List<String> getSuccessfulLogins() {return successfulLogins;}
 
-    public String[] getFailedLogins() {return failedLogins;}
+    public List<String> getFailedLogins() {return failedLogins;}
 }

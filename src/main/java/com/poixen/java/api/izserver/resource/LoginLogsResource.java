@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import java.util.List;
 
 /**
  * Custom resource for checking login times
@@ -19,7 +20,7 @@ public class LoginLogsResource {
     @Timed
     @RolesAllowed({"USER"})
     @Path("/successful_logins")
-    public String[] successfulLogins(@Context SecurityContext context) {
+    public List<String> successfulLogins(@Context SecurityContext context) {
 
         User user = (User)context.getUserPrincipal();
         if (user == null) {
@@ -34,7 +35,7 @@ public class LoginLogsResource {
     @Timed
     @RolesAllowed({"USER"})
     @Path("/failed_logins")
-    public String[] failedLogins(@Context SecurityContext context) {
+    public List<String> failedLogins(@Context SecurityContext context) {
         // user needs to pass in their token
 
         User user = (User)context.getUserPrincipal();

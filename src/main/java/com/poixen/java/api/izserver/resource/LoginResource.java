@@ -13,9 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Custom resource for logging in wih an existing user
@@ -52,13 +50,16 @@ public class LoginResource {
         }
         // check password
         if (!user.getPassword().equals(DigestUtils.sha1Hex(request.getPassword()))) {
-            userDAO.addFailedLogin(user.getUsername(), new Date().toString());
+            List<String> timestamps = new ArrayList<>(user.getFailedLogins());
+            timestamps.add(new Date().toString());
+            userDAO.addFailedLogin(String.join(",", timestamps), user.getUsername());
         }
 
-
-        // TODO: 13/11/16 took too long to try and figure out how to append to an array of varchar, making 2 calls for this example
         // add a timestamp to the successful login
-        userDAO.addSuccessfulLogin(request.getUsername(), new Date().toString());
+        List<String> timestamps = new ArrayList<>(user.getSuccessfulLogins());
+        timestamps.add(new Date().toString());
+        String timestampString = String.join(",", timestamps);
+        userDAO.addSuccessfulLogin(timestampString, request.getUsername());
 
         String pretoken = user.getUsername() + ":" + user.getPassword();
         String token = new String(Base64.encodeBase64(pretoken.getBytes()));
