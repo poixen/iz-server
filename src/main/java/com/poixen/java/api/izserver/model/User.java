@@ -3,6 +3,9 @@ package com.poixen.java.api.izserver.model;
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Data model for representing a user
+ */
 public class User implements Principal {
     private final int id;
     private final String username;

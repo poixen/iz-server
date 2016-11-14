@@ -66,9 +66,10 @@ public class IZServerApplication extends Application<IZServerConfiguration> {
         final LoginLogsResource loginLogsResource = new LoginLogsResource();
         env.jersey().register(loginLogsResource);
 
-        // register a health check // TODO: 12/11/16 need to update for new resources
-//        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());
-//        env.healthChecks().register("template", healthCheck);
+        // TODO: 12/11/16 given more time would add healh checks
+        // register a health check
+        // final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());
+        // env.healthChecks().register("template", healthCheck);
 
         // wrap BasicAuthenticator in a CachingAuthenticator
         CachingAuthenticator<BasicCredentials, User> cachingAuthenticator =
@@ -76,7 +77,7 @@ public class IZServerApplication extends Application<IZServerConfiguration> {
                         config.getAuthenticationCachePolicy());
 
         // register basic authentication
-        // TODO: 12/11/16 set up {@link ChainedFactory} for using OAuth2
+        // TODO: 12/11/16 more time set up {@link ChainedFactory} for using OAuth2
         env.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<User>()
                         .setAuthenticator(cachingAuthenticator)

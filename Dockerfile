@@ -6,6 +6,7 @@ ENV INST_DIR /opt/iz-server
 RUN mkdir -p ${INST_DIR}
 COPY target/iz-server.jar ${INST_DIR}
 COPY scripts/start.sh ${INST_DIR}
+RUN chmod +x scripts/start.sh
 
 VOLUME ["${INST_DIR}"]
 EXPOSE 8080

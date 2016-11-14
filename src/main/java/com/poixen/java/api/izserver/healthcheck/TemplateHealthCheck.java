@@ -3,7 +3,7 @@ package com.poixen.java.api.izserver.healthcheck;
 import com.codahale.metrics.health.HealthCheck;
 
 /**
- * Created by matthewlowe on 11/11/16.
+ * Currently not used, though is a template for making health checks in the future
  */
 public class TemplateHealthCheck extends HealthCheck {
     private final String template;

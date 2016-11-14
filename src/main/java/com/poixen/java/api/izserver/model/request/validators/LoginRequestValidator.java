@@ -24,7 +24,7 @@ public class LoginRequestValidator implements RequestValidator {
                 throw new IllegalArgumentException("No password provided in Login Request");
             }
 
-            // validate more if needed...
+            // TODO: 14/11/16 perform additional validation if needed
 
         } else {
             throw new IllegalArgumentException("Can not validate a request of type '" + request.getClass().getName() + "' in RegisterRequestValidator");

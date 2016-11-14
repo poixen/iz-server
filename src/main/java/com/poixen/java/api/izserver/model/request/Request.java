@@ -1,7 +1,8 @@
 package com.poixen.java.api.izserver.model.request;
 
 /**
- * Created by matthewlowe on 12/11/16.
+ * Marker interface anti-patern
  */
+// TODO: 14/11/16 lord forgive my for I have Marker Interfaced
 public interface Request {
 }

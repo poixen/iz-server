@@ -39,6 +39,7 @@ public class RegisterRequestValidator implements RequestValidator {
                 throw new IllegalArgumentException("Password must be between " + minPasswordLen + " and " + maxPasswordLen + " characters. Current: " + usernameLen);
             }
 
+            // TODO: 14/11/16 add additional validation here if needed
             // add any additional validation needed here
             //  . check if sanitization is needed
             //  . check for invalid characters

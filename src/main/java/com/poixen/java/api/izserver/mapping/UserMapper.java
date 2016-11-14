@@ -13,9 +13,11 @@ import java.util.Arrays;
  * {@link ResultSetMapper} for mapping a {@link User}
  */
 public class UserMapper implements ResultSetMapper<User> {
+
     @Override
     public User map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 
+        // TODO: 14/11/16 There are probably a lot better ways of handling this, would refactor with more time
         Array successfulLogins = r.getArray("successful_logins");
         Array failedLogins = r.getArray("failed_logins");
         Array roles = r.getArray("roles");
